@@ -73,5 +73,47 @@ describe('server', function() {
     });
   });
 
+  it('Should 413 when passed too large of a file', function() {
+    var requestParams = {method: 'POST',
+      uri: 'http://127.0.0.1:3000/classes/messages',
+      json: {
+        username: 'Jono',
+        message: 'Do my bidding!'}
+    };
+
+    request(requestParams, function(error, response, body) {
+      if (requestParams.json.message.length > 1e7) {
+        expect(response.statusCode).to.equal(413);
+        done();
+      } else {
+        expect(response.statusCode).to.equal(201);
+        done();
+      }
+    });
+  });
+
+  it('Should return 200 upon OPTIONS request', function(done) {
+    request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+      if (response.method === 'OPTIONS') {
+        expect(response.statusCode).to.equal(200);
+
+      }
+    });
+    done();
+  });
+
+  it('Should only accept GET, POST or OPTIONS requests', function(done) {
+    request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+      done();
+      if (response.method !== 'GET' && response.method !== 'POST' && response.method !== 'OPTIONS') {
+        expect(response.statusCode).to.equal(405);
+        done();
+      } else {
+        expect(response.statusCode).to.equal(201);
+        done();
+      }
+    });
+  });
+
 
 });

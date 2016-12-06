@@ -1,6 +1,7 @@
 var handler = require('../request-handler');
 var expect = require('chai').expect;
 var stubs = require('./Stubs');
+var request = require('request');
 
 // Conditional async testing, akin to Jasmine's waitsFor()
 // Will wait for test to be truthy before executing callback
@@ -113,5 +114,37 @@ describe('Node Server Request Listener Function', function() {
         expect(res._responseCode).to.equal(404);
       });
   });
+
+  it('Should only accept GET, POST or OPTIONS requests', function(done) {
+    request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
+      if (response.method !== 'GET' && response.method !== 'POST' && response.method !== 'OPTIONS') {
+        expect(response.statusCode).to.equal(200);
+        done();
+      } else {
+        expect(response.statusCode).to.equal(201);
+        done();
+      }
+    });
+  });
+
+  // it('Should 413 when passed too large of a file', function() {
+  //   var stubMsg = {
+  //     username: 'Jono',
+  //     message: 'Do my bidding!'
+  //   };
+  //   var req = new stubs.request('/classes/messages', 'POST', stubMsg);
+  //   var res = new stubs.response();
+  //
+  //   handler.requestHandler(req, res);
+  //
+  //   // Expect 201 Created response status
+  //   expect(res._responseCode).to.equal(201);
+  //
+  //   // Testing for a newline isn't a valid test
+  //   // TODO: Replace with with a valid test
+  //   // expect(res._data).to.equal(JSON.stringify('\n'));
+  //   expect(res._ended).to.equal(true);
+  // });
+
 
 });

@@ -71,11 +71,21 @@ var requestHandler = function(request, response) {
       request.on('data', function(data) {
         requestBody += data;
         caja.push(JSON.parse(requestBody));
+        if (requestBody.length > 1e7) {
+          response.writeHead(413, 'Request entity too large', {'Content-Type': 'text./html'});
+          response.end();
+        }
       });
       request.on('end', function() {
         response.end();
       });
     }
+  } else if (response.method !== 'GET' && response.method !== 'POST' && response.method !== 'OPTIONS') {
+    response.writeHead(405, 'Invalid method', {'Content-Type': 'text/html'});
+    reponse.end();
+  } else if (response.method === 'OPTIONS') {
+    response.writeHead(200, 'Allow: GET, POST', {'Content-Type': 'text/html'});
+    response.end();
   } else {
     response.writeHead(404, 'Resource not found', {'Content-Type': 'text/html'});
     response.end();
