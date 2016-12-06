@@ -57,18 +57,23 @@ var requestHandler = function(request, response) {
     if (request.url === '/classes/messages') {
       response.writeHead(200, headers);
       response.end(JSON.stringify({results: caja}));
+      console.log(caja + 'caja');
+    } else if (request.url === '/') {
+      response.writeHead(200, headers);
+      response.end(JSON.stringify({results: caja}));
     } else {
-      response.writeHead(404, {'Content-Type': 'text/html'});
+      response.writeHead(404, {'Content-Type': 'application/json'});
       response.end();
     }
   } else if (request.method === 'POST') {
     if (request.url === '/classes/messages') {
+      let requestBody = '';
+      response.writeHead(201, {'Content-Type': 'text/html'});
       request.on('data', function(data) {
-        caja.push(request.postdata);
-        console.log(caja, 'inside');
+        requestBody += data;
+        caja.push(JSON.parse(requestBody));
       });
       request.on('end', function() {
-        response.writeHead(201, {'Content-Type': 'text/html'});
         response.end();
       });
     }
@@ -76,7 +81,8 @@ var requestHandler = function(request, response) {
     response.writeHead(404, 'Resource not found', {'Content-Type': 'text/html'});
     response.end();
   }
-  console.log(caja, 'outside');
+  // console.log(caja, 'outside');
+  response.end('Hello world');
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
   // response.end() will be the body of the response - i.e. what shows
@@ -85,6 +91,7 @@ var requestHandler = function(request, response) {
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
   // response.end('Hello, World!');
+
 };
 console.log(caja, 'halp');
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -98,4 +105,4 @@ console.log(caja, 'halp');
 // client from this domain by setting up static file serving.
 
 
-module.exports = requestHandler;
+module.exports.requestHandler = requestHandler;
