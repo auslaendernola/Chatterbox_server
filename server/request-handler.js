@@ -47,7 +47,7 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'text/plain';
+  headers['Content-Type'] = 'application/json';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
@@ -57,7 +57,6 @@ var requestHandler = function(request, response) {
     if (request.url === '/classes/messages') {
       response.writeHead(200, headers);
       response.end(JSON.stringify({results: caja}));
-      console.log(caja + 'caja');
     } else if (request.url === '/') {
       response.writeHead(200, headers);
       response.end(JSON.stringify({results: caja}));
@@ -82,7 +81,7 @@ var requestHandler = function(request, response) {
     response.end();
   }
   // console.log(caja, 'outside');
-  response.end('Hello world');
+  // response.end('Hello world');
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
   // response.end() will be the body of the response - i.e. what shows
@@ -93,7 +92,6 @@ var requestHandler = function(request, response) {
   // response.end('Hello, World!');
 
 };
-console.log(caja, 'halp');
 // These headers will allow Cross-Origin Resource Sharing (CORS).
 // This code allows this server to talk to websites that
 // are on different domains, for instance, your chat client.
