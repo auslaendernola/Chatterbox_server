@@ -3,9 +3,9 @@ var app = {
 
   //TODO: The current 'handleUsernameClick' function just toggles the class 'friend'
   //to all messages sent by the user
-  server: 'https://api.parse.com/1/classes/messages/',
+  server: 'http://127.0.0.1:3000/',
   username: 'anonymous',
-  roomname: 'lobby',
+  // roomname: 'lobby',parse.api/1/classes/messages
   lastMessageId: 0,
   friends: {},
   messages: [],
@@ -40,7 +40,7 @@ var app = {
 
     // POST the message to the server
     $.ajax({
-      url: app.server,
+      url: app.server + '/classes/messages',
       type: 'POST',
       data: JSON.stringify(message),
       success: function (data) {
@@ -58,7 +58,7 @@ var app = {
 
   fetch: function(animate) {
     $.ajax({
-      url: app.server,
+      url: app.server + '/classes/messages',
       type: 'GET',
       data: { order: '-createdAt' },
       contentType: 'application/json',
